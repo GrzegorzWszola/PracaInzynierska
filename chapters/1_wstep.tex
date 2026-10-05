@@ -1,0 +1,33 @@
+\chapter{Wstęp}
+\label{chapt:Wstep}
+
+Podczas czytania książek uwaga czytelnika przykuwana jest przez sam tekst, jednak na ostateczne doświadczenie lektury wpływa wiele czynników, które na pierwszy rzut oka mogą wydawać się niepowiązane. Jednym z takich elementów jest muzyka towarzysząca czytaniu, może ona nadać ton, pogłębić odczuwany smutek lub dać poczucie lepszej immersji w świat dzieła. Celem pracy jest stworzenie systemu wspomagającego przeżywanie lektury poprzez automatyczny dobór muzyki na podstawie analizy emocjonalnej tekstu z wykorzystaniem uczenia maszynowego.
+
+\section{Cel pracy}
+Opracowanie i realizacja aplikacji webowej przeznaczonej do lektury e-booków, która w sposób
+zautomatyzowany personalizuje doświadczenia użytkownika poprzez dobór podkładu muzycznego
+pasującego do nastroju aktualnie odtwarzanego fragmentu tekstu. System umożliwi analizę treści w
+czasie rzeczywistym, wykorzystując modele uczenia maszynowego do klasyfikacji emocjonalnej tekstu
+i dynamicznego sterowania odtwarzaczem audio. Zastosowanie do implementacji rozwiązania
+nowoczesnych technologii (React.js, FastAPI/Python), architektury REST API oraz kontenerów
+Docker, co zapewni skalowalność systemu i ułatwi jego wdrożenie.
+
+\section{Aspekt inżynierski}
+Projekt oraz implementacja uniwersalnej aplikacji do odczytu e-booków umożliwiającej automatyczny
+dobór muzyki ambientowej w zależności od aktualnie prezentowanej treści. Realizacja pełnego stosu
+technologicznego (full-stack) systemu: warstwy prezentacji (technologia React.js lub alternatywna) -
+zapewnia interfejs czytnika obsługujący formaty EPUB/PDF; logiki biznesowej (technologia
+FastAPI/Python) - integruje potok przetwarzania języka naturalnego (NLP), w którym model Sentence
+Transformer dokonuje ekstrakcji cech tekstu (embedding), a wytrenowany klasyfikator
+XGBoost/LightGBM przypisuje mu określony nastrój; warstwy danych - optymalizacja wydajności
+aplikacji poprzez udostępnianie informacji o utworach w relacyjnej bazie SQLite, natomiast plików
+audio za pośrednictwem wydajnego serwera statycznego Nginx. Podejmowanie decyzji o zmianie
+ścieżki dźwiękowej na podstawie analizy statystycznej wyjścia modelu (thresholding) oraz dokonanej
+oceny poziomu emocjonalnego aktualnie odtwarzanego fragmentu tekstu (eliminacja zbyt częstych
+zmian muzyki). Wdrożenie systemu z użyciem technologii Docker oraz środowiska Docker Compose
+(izolacja usług i ułatwienie zarządzania zależnościami). Weryfikacja poprawności działania aplikacji z
+wykorzystaniem testów jednostkowych, integracyjnych i funkcjonalnych E2E. Analiza wyników testów
+oraz wnioski. 
+
+\section{Wykorzystanie AI}
+W trakcie realizacji pracy wykorzystano modele językowe Claude Sonnet (Anthropic) oraz Gemini (Google) jako wsparcie w procesie tworzenia oprogramowania i redagowania dokumentacji. Narzędzia te były używane w szczególności do: wyszukiwania i syntezy informacji na temat wykorzystywanych technologii (React, FastAPI, biblioteki uczenia maszynowego); wsparcia w roli asystenta programisty (\textit{pair programming}) przy pisaniu fragmentów kodu, które następnie były dogłębnie analizowane, testowane i w razie potrzeby modyfikowane. Nauki nowych technologii i wcześniej nieznanych wzorców projektowych. Generowania wstępnych szkiców dokumentacji technicznej kodu oraz propozycji scenariuszy testowych, które zostały zweryfikowane i dostosowane do rzeczywistych wymagań systemu. Cały kod źródłowy został napisany samodzielnie lub zredagowany po dogłębnym zrozumieniu jego działania.

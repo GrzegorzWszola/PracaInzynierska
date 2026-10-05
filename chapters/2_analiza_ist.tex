@@ -1,0 +1,39 @@
+\chapter{Analiza istniejących aplikacji do odczytu e-booków}
+
+Analizie poddane zostały darmowe aplikacje desktopowe (Calibre) oraz przeglądarkowe (Readest, Flow) pod względem:
+\begin{itemize}
+    \item Obsługiwanych formatów.
+    \item Interfejsu graficznego (UI) oraz łatwości użytkowania (UX).
+    \item Technologii wyróżniających poszczególne aplikacje
+\end{itemize}
+
+Kryterium wyboru aplikacji do analizy stanowiła ich popularność wśród 
+użytkowników, liczba pozytywnych recenzji oraz łatwy dostęp (brak wymaganego logowania lub zakładania konta). Wybrane aplikacje reprezentują dwa odmienne modele dystrybucji oprogramowania, klasyczne programy instalowane lokalnie oraz rozwiązania działające bezpośrednio w przeglądarce internetowej, co pozwala na porównanie różnych podejść do problemu odczytu e-booków.
+
+\section{Calibre}
+Calibre jest jedną z najbardziej rozbudowanych aplikacji do odczytu treści w formie elektronicznej. Według instrukcji użytkowania \cite{CalibreUserManual}, aplikacja umożliwia między innymi wyświetlanie, przetwarzanie i katalogowanie treści. Z bardziej zaawansowanych funkcjonalności daje możliwość pobierania metadanych z internetu, lub z dostępnych gazet tworzenia książek elektronicznych.
+
+Jej ograniczeniami jest dość przestarzały i na pierwszy rzut oka skomplikowany interfejs. Duża część obsługiwanych formatów oraz funkcji jest bardzo specjalistyczna i nie dotyka problemów większości użytkowników.
+
+Calibre pozostaje jednak najbardziej wszechstronnym narzędziem spośród analizowanych aplikacji desktopowych, szczególnie w kontekście zarządzania większą biblioteką elektroniczną.
+
+\section{Flow}
+Flow to aplikacja przeglądarkowa pozwalająca na czytanie książek elektronicznych w formacie EPUB. Wyróżnia się ona szczególnie interfejsem zbliżonym do Visual Studio Code, a wypisane przez twórców funkcjonalności \cite{Flow} to między innymi, zaawansowane i szybkie wyszukiwanie w książce, podgląd obrazów, pamięć w chmurze, czy spersonalizowane motywy.
+\newpage
+Jest o wiele mniej rozbudowana niż dla przykładu Calibre, jednak łatwość i jakość samego użytkowania są na wysokim poziomie. Interfejs szczególnie może podobać się osobom na codzień korzystającym z Visual Studio Code, a personalizowane motywy dają szeroki wybór dla każdego użytkownika. Dużą korzyścią jest również pamięć w chmurze dzięki której nie wymagane jest wgrywanie tej samej książki od nowa za każdym razem.
+
+Podobnie jak w przypadku pozostałych analizowanych aplikacji, Flow nie oferuje żadnych funkcjonalności opartych na sztucznej inteligencji ani uczeniu maszynowym personalizacja ogranicza się do warstwy wizualnej (motywy, typografia) oraz podstawowych narzędzi organizacyjnych (biblioteka, zakreślanie, wyszukiwanie).
+
+\section{Readest}
+Readest \cite{Readest} jest aplikacją przeglądarkową, ale posiada również wersje mobilne na telefony z systemem IOS (Apple) i Adnroid jak i również wersje na komputery z systemem operacyjnym MacOs, Linux i Windows. Wersja przeglądarkowa posiada nowoczesny i przyjemny w użytkowaniu interfejs opierający się głównie na ikonach.
+
+Posiada zbliżone funkcjonalności do Flow, jak odczytywanie książek elektronicznych w formacie EPUB oraz PDF, przeglądanie rozdziałów, wyszukiwanie w tekście. Z bardziej rozbudowanych funkcji umożliwia również dynamicznie tłumaczenie tekstu i możliwość czytania dwóch tekstów jednocześnie.
+
+Spośród wszystkich analizowanych aplikacji, Readest jako jedyna wykorzystuje mechanizmy sztucznej inteligencji nie tylko do syntezy mowy, ale i planuje rozwój w kierunku podsumowań tekstu generowanych przez AI (funkcja w fazie rozwoju). Stanowi to istotny punkt odniesienia w kontekście niniejszej pracy, ponieważ pokazuje rosnące zainteresowanie integracją komponentów ML/AI w tradycyjnie prostych narzędziach do czytania e-booków, jednak wciąż w sposób ograniczony do pojedynczych funkcji pomocniczych, a nie stanowiący centralny element aplikacji.
+
+\section{Podsumowanie}
+Po analizie dostępnych na rynku aplikacji Calibre, Readest oraz Flow, łatwo można zauważyć wspólny mianownik, którym jest skupienie na funkcjach związanych z zarządzaniem treścią oraz personalizacją wyglądu. Przeprowadzona ewaluacja pokazuje, że na rynku brakuje aplikacji łączących odczyt e-booków z zaawansowanymi funkcjami opartymi na sztucznej inteligencji i uczeniu maszynowym.
+
+W kontekście niniejszej pracy warto wspomnieć o aplikacji MoodReads \cite{MoodeReads}, która najbardziej zbliża się do problematyki poruszanej w poniższym projekcie, dobierając muzykę do czytanej książki. Rozwiązanie to nie analizuje jednak treści na bieżąco, dobór utworów opiera się wyłącznie na gatunku literackim całej książki, a nie na emocjonalnym charakterze aktualnie czytanego fragmentu, co znacząco ogranicza precyzję i dynamikę dopasowania.
+\newpage
+Przeprowadzona analiza wykazała istotną lukę na rynku aplikacji do odczytu treści elektronicznych w zakresie integracji uczenia maszynowego z analizą emocjonalną tekstu w czasie rzeczywistym. Stanowi to uzasadnienie dla zaprojektowania i implementacji rozwiązania opisanego w niniejszej pracy, w którym dobór muzyki ambientowej nie opiera się na statycznych metadanych, lecz na dynamicznej analizie emocjonalnej treści czytanego tekstu.

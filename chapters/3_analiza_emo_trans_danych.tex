@@ -1,0 +1,51 @@
+\chapter{Analiza emocji i transformacja zbiorów danych}
+
+Dobór odpowiedniego zbioru danych \textit{(ang. dataset)} jest jedną z kluczowych decyzji podczas pracy z modelami uczenia maszynowego. Dobrze dobrane dane mogą znacząco poprawić jakość modelu. Z kolei ich nieumiejętne przetwarzanie lub niedopasowanie domeny danych do zadania (np. trenowanie modelu generującego poezję na tekstach prozatorskich) prowadzi do błędów i pogorszenia wyników, które często trudno wykryć.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/vad.png}
+    \caption[Przestrzeń afektywna rozpięta przez trzy wymiary VAD wraz z położeniem sześciu podstawowych emocji Ekmana]{Przestrzeń afektywna rozpięta przez trzy wymiary VAD wraz z położeniem sześciu podstawowych emocji Ekmana, wyznaczonym przez Russella i Mehrabiana. Źródło: \cite{buechel-hahn-2017-emobank}, na podstawie:~\cite{russel_james_evidence}}
+    \label{fig:vad_representation}
+\end{figure}
+
+\section{Czym jest VAD}
+VAD (ang. Valence, Arousal, Dominance) jest wymiarowym modelem emocji, w którym stan emocjonalny reprezentowany jest przez trzy wartości liczbowe. Wartościowość (ang. valence) określa, jak przyjemna lub nieprzyjemna jest dana emocja, pobudzenie (ang. arousal), jak silnie aktywuje ona organizm, a dominacja (ang. dominance) w jakim stopniu osoba odczuwa kontrolę nad sytuacją. Dzięki temu można odróżnić emocje podobne pod względem walencji i pobudzenia, np. gniew (wysoka dominacja) od strachu (niska dominacja). W skrócie pozwala opisać emocje jako punkt w trójwymiarowym ciągłym systemie, gdzie osiami są właśnie te parametry \cite{vad_description}
+
+
+Podejście wymiarowe ma kilka przewag nad modelami dyskretnymi, w których emocji przypisuje się jedną z ustalonych etykiet. Ze względu na ciągłość skali VAD pozwala opisać nie tylko konkretną emocję, lecz także jej intensywność oraz stany pośrednie. Dodatkowo wartości liczbowe umożliwiają wykonywanie podstawowych operacji statystycznych, np. uśrednienie dwóch ocen, co w przypadku etykiet jest utrudnione lub wymaga dodatkowych założeń. Wadą tego podejścia jest jednak mniejsza intuicyjność, ponieważ trójka liczb jest trudniejsza do zinterpretowania niż nazwa emocji.
+
+\section{NRC VAD leksykon}
+NRC VAD Lexicon v2 jest jednym z największych zasobów opisujących emocje w ujęciu wymiarowym. Zawiera ponad 55 tysięcy angielskich słów oraz wyrażeń wielowyrazowych, z których każdemu przypisano trzy wartości (walencję, pobudzenie i dominację) na skali od $-1$ do $1$. Oceny pochodzą od ankietowanych i zostały zebrane metodą \textit{Best-Worst Scaling}, w której respondent spośród kilku terminów wybiera ten o największej i najmniejszej wartości danego wymiaru. Daje to bardziej spójne wyniki niż bezpośrednie ocenianie na skali liczbowej. Szczegółowy opis procesu zbierania danych i jego rzetelności można znaleźć w pracy~\cite{mohammad2025nrcvadlexiconv2}.
+
+Leksykon NRC VAD nie sprawdza się jako bezpośredni zbiór treningowy. Zawiera on pojedyncze słowa i krótkie frazy, więc model trenowany na takich danych nie nauczyłby się uwzględniać kontekstu zdania. Alternatywą jest użycie leksykonu do zbudowania reprezentacji wejściowej zamiast modelu osadzeń zdań (ang. \textit{sentence embedding model}), na przykład przez uśrednienie wartości VAD słów występujących w tekście. Takie podejście, nazywane workiem słów (ang. \textit{bag of words}), ma jednak tę wadę, że pomija kolejność słów, wieloznaczność i negację. Wyniki eksperymentów (Tabela~\ref{tab:wyniki_vad}) pokazują, że zamrożony model osadzeń zdań (ang. \textit{frozen sentence embedder}) osiąga znacznie niższy błąd niż podejście oparte na leksykonie. % TODO: wstawić liczby i metrykę
+
+\section{EmoBank}
+EmoBank~\cite{buechel-hahn-2017-emobank} to zbiór około 10 tysięcy angielskich zdań, z których każde oceniono w wymiarach VAD na skali od 1 do 5. Oceny wystawiali ankietowani, a autorzy zbioru zbadali m.in. wpływ perspektywy adnotacji (emocje wyrażane przez autora tekstu a emocje odczuwane przez czytelnika) na uzyskane wyniki. Szczegóły dotyczące procesu zbierania i weryfikacji danych opisano w pracy źródłowej.
+
+W porównaniu z leksykonem NRC VAD, EmoBank jest lepiej dopasowany do zadania, ponieważ etykiety przypisano całym zdaniom, a nie pojedynczym słowom. Ograniczeniem jest jednak skład domenowy zbioru (Tabela~\ref{tab:emobank_genres}). fikcja stanowi jedynie około jednej czwartej danych, a pozostałe zdania pochodzą z tekstów takich jak wiadomości, listy czy przewodniki turystyczne co może negatywnie wpłynąć na wynik modelu. Dodatkowo zdania oceniano pojedynczo, bez kontekstu sąsiednich fragmentów, a w czytaniu książki nastrój zależy właśnie od szerszego fragmentu.
+
+\begin{table}[htbp]
+  \centering
+  \caption[Rozkład gatunków w zbiorze EmoBank]{Rozkład gatunków tekstu w zbiorze EmoBank przed i po filtrowaniu. Źródło: \cite{buechel-hahn-2017-emobank}.}
+  \label{tab:emobank_genres}
+  \begin{tabular}{llrr}
+    \toprule
+    Korpus & Domena & Surowe & Po filtrowaniu \\
+    \midrule
+    SE07 & nagłówki wiadomości & 1250 & 1192 \\
+    \midrule
+    \multirow{6}{*}{MASC} & blogi & 1378 & 1336 \\
+     & eseje & 1196 & 1135 \\
+     & beletrystyka & 2893 & 2753 \\
+     & listy & 1479 & 1413 \\
+     & gazety & 1381 & 1314 \\
+     & przewodniki turystyczne & 971 & 919 \\
+    \midrule
+    \multicolumn{2}{l}{\textbf{Suma}} & \textbf{10548} & \textbf{10062} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\FloatBarrier
+\section{CR4-NarrEmote}

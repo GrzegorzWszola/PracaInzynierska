@@ -1,0 +1,118 @@
+%% UWAGI
+%% - wszystkie pliki kodujemy w utf8
+%% - stosujemy biber'a do obsługi bibliografii; nie stosujemy bibtex'a;
+%%   Overleaf automatycznie wykrywa biber'a; w innych środowiskach być może
+%%   będziesz musiał ustawić go ręcznie
+%% - proponujemy pakiet acro do obsługi synonimów; jeśli nie widzisz potrzeby korzystania z synonimów,
+%%   to zakomentuj dwie linijki w tym pliku
+
+\documentclass[12pt, a4paper, twoside, titlepage]{report}
+
+\input{settings} % Plik z najważnieszymi ustawieniami i makrami
+
+%% TUTAJ WPISZ DANE SWOJEJ PRACY 
+
+\newcommand{\stKierunek}{Informatyka Techniczna}
+\newcommand{\stKodKierunku}{ITE}
+\newcommand{\stSpecjalnosc}{Inżynieria Systemów Informatycznych} %% zostaw pusty wpis jak nie ma specjalności
+\newcommand{\stKodSpecjalnosci}{INS} %% kody kierunków i specjalności znajdziesz na stronach WIT 
+\newcommand{\stCzyMgr}{0} % 1 = Magisterska, 0 = Inżynierska
+\newcommand{\stTytulPL}{Inteligentna aplikacja webowa do odczytu e-booków umożliwiająca automatyczny dobór muzyki ambientowej w zależności od aktualnej treści}
+\newcommand{\stTytulAng}{An intelligent web application for reading e-books that automatically selects ambient music based on the current content}
+\newcommand{\stAutor}{Grzegorz Wszoła}
+\newcommand{\stOpiekun}{Dr inż. Robert Wójcik}
+\newcommand{\stSlowaKluczowe}{uczenie maszynowe, przetwarzanie danych, analiza emocji, analiza danych, Python}
+\newcommand{\stRok}{, 2026}  % rok złożenia pracy
+
+\SetMetaData % USTAWIENIE MATEDANYCH DLA pliku PDF
+
+%% WŁASNE SKRÓTY
+\newcommand{\IFF}{\leftrightarrow}
+\newcommand{\NN}{\mathbb{N}} % liczby naturalne
+\newcommand{\ZZ}{\mathbb{Z}} % liczby całkowite
+\newcommand{\QQ}{\mathbb{Q}} % liczby wymierne
+\newcommand{\RR}{\mathbb{R}} % liczby rzeczywiste
+
+% Korzystamy z pakietów amsmath oraz amsthm
+\newtheorem{theorem}{Twierdzenie}[chapter]
+\newtheorem{lemma}{Lemat}[chapter]
+\newtheorem{corollary}{Wniosek}[chapter]
+\newtheorem{definition}{Definicja}[chapter]
+
+% OBSŁUGA BIBLIOGRAFII
+% STOSUJEMY biblatex ORAZ progam biber do kompilacji plików *.bib
+\RequirePackage[
+    backend=biber,
+    style=numeric,
+    sorting=none,     % Sortowanie wg kolejności występowania
+    urldate=iso,      % Daty URL w formacie ISO
+    seconds=true      % Pokaż sekundy w datach dostępu (opcjonalnie)
+]{biblatex}
+% To jest przykład zastosowania standardowego formatowania LNCS
+% \usepackage[backend=biber,style=lncs]{biblatex} % styl LNCS globalnie
+
+% Dodanie pliku z bibliografią
+% TU WSTAW NAZWĘ SWOJEGO PLIKU
+\addbibresource{bibliography.bib}
+
+%% AKRONIMY (skróty;synonimy)
+%\input{acronyms}   % Zakomentuj tę linię, jeśli nie chcesz stosować synonimów  
+
+%% TU ZACZYNA SIĘ DOKUMENT
+
+\begin{document}
+
+%% NIE RUSZAJ NASTĘPNYCH TRZECH LINIJEK %%
+\StronaTytulowa
+\include{abstract} % plik abstrakt.txt edytujesz samodzielnie 
+\SpisTresci
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+\lstlistoflistings
+\newpage
+
+%%% Tutaj wyświetlamy listę akronimów
+%%  jako parametr (template) możesz wybrać: lof, toc, description
+%%%  
+% \ShowAcronyms{lof} %% Zakomentuj tę linię jeśli nie chcesz używać synonimów
+
+\pagenumbering{arabic}  %% NIE RUSZAJ TEGO
+
+%% TU JEST MIEJSCE NA DOŁĄCZENIE TWOICH ROZDZIAŁÓW
+\include{chapters/1_wstep}
+\include{chapters/2_analiza_ist}
+\include{chapters/3_analiza_emo_trans_danych}
+\include{chapters/4_analiza_trenowanie_modeli}
+\include{chapters/5_wymagania_arch}
+\include{chapters/6_projekt_aplikacji}
+\include{chapters/7_implementacja_systemu}
+\include{chapters/8_testowanie_aplikacji}
+\include{chapters/9_podsumowanie}
+
+
+
+
+%% TU WYWOŁUJEMY BIBLIOGRAFIĘ
+%% ZRÓDŁO ZOSTAŁO USTAWIONE POLECENIEM \addbibresource
+%% W NAGŁÓWKU STRONY
+%\printbibliography[heading=bibintoc, title={Spis literatury}]
+\printbibliography[title={Spis literatury}]
+%% TU ZACZYNAJĄ SIĘ ZAŁĄCZNIKI
+\appendix
+%% \include{Dodatek01}
+%% ...
+%% \include{DodatekYY}
+
+
+%% --- Spisy ---
+%% odkomentuj potrzebne spisy 
+%% (zastanów się, czy są Ci one potrzebne)
+ 
+%\listoffigures
+%\listoftables
+%\lstlistoflistings
+
+\end{document}
