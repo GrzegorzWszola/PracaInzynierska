@@ -113,6 +113,27 @@
     stringstyle=\color{red}
 }
 
+\lstdefinestyle{pythonStyle}{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\bfseries\color{codekw},
+    keywordstyle={[2]\color{codekw}},             % wbudowane funkcje (patrz niżej)
+    emphstyle=\color{codekw}\itshape,             % self, cls
+    stringstyle=\color{codestr},
+    commentstyle=\itshape\color{codecmt},
+    tabsize=4,                                    % PEP 8
+    showstringspaces=false,
+    breaklines=true,
+    breakatwhitespace=false,
+    columns=fullflexible,
+    keepspaces=true,
+    upquote=true,                                 % proste apostrofy zamiast zakrzywionych
+    xleftmargin=1.5em,                            % miejsce na numery linii
+    morekeywords=[2]{print,len,range,enumerate,zip,isinstance,open,sum,min,max,sorted,float,int,str,list,dict,set,tuple},
+    morekeywords={self,cls,None,True,False,with,as,yield,lambda,async,await},
+    emph={self,cls}
+}
+
 %%% 7. HYPERREF I CLEVEREF (Musi być na końcu)
 \RequirePackage[
     pdfusetitle,

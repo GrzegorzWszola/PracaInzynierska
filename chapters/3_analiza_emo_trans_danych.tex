@@ -9,10 +9,10 @@ pogorszenia wyników, które często trudno wykryć.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\linewidth]{figures/3/vad.png}
-    \caption[Przestrzeń afektywna rozpięta przez trzy wymiary VAD wraz z położeniem sześciu
-    podstawowych emocji Ekmana]{Przestrzeń afektywna rozpięta przez trzy wymiary VAD wraz z
-    położeniem sześciu podstawowych emocji Ekmana, wyznaczonym przez Russella i Mehrabiana. Źródło:
-    \cite{buechel-hahn-2017-emobank}, na podstawie:~\cite{russel_james_evidence}}
+                    \caption[Przestrzeń afektywna rozpięta przez trzy wymiary VAD wraz z położeniem sześciu
+                    podstawowych emocji Ekmana]{Przestrzeń afektywna rozpięta przez trzy wymiary VAD wraz z
+                    położeniem sześciu podstawowych emocji Ekmana, wyznaczonym przez Russella i Mehrabiana. Źródło:
+                    \cite{buechel-hahn-2017-emobank}, na podstawie:~\cite{russel_james_evidence}}
     \label{fig:vad_representation}
 \end{figure}
 
@@ -51,7 +51,7 @@ zdania. Alternatywą jest użycie leksykonu do zbudowania reprezentacji wejścio
 osadzeń zdań (ang. \textit{sentence embedding model}), na przykład przez uśrednienie wartości
 VAD słów występujących w tekście. Takie podejście, nazywane workiem słów (ang. \textit{bag of
 words}), ma jednak tę wadę, że pomija kolejność słów, wieloznaczność i negację. Wyniki
-eksperymentów (Tabela~\ref{tab:wyniki_vad}) pokazują, że zamrożony model osadzeń zdań (ang.
+eksperymentów (Tabela~\ref{tab:lexicon_vs_st}) pokazują, że zamrożony model osadzeń zdań (ang.
 \textit{frozen sentence embedder}) osiąga znacznie niższy błąd niż podejście oparte na
 leksykonie. % TODO: wstawić liczby i metrykę
 
@@ -66,16 +66,15 @@ W porównaniu z leksykonem NRC VAD, EmoBank jest lepiej dopasowany do zadania, p
 przypisano całym zdaniom, a nie pojedynczym słowom. Ograniczeniem jest jednak skład domenowy
 zbioru (Tabela~\ref{tab:emobank_genres}). Fikcja stanowi jedynie około jednej czwartej danych,
 a pozostałe zdania pochodzą z tekstów takich jak wiadomości, listy czy przewodniki turystyczne,
-co może negatywnie wpłynąć na wynik modelu. Dodatkowo zdania oceniano pojedynczo, bez kontekstu
-sąsiednich fragmentów, a w czytaniu książki nastrój zależy właśnie od szerszego fragmentu.
+co może negatywnie wpłynąć na wynik modelu.
 
 \begin{table}[htbp]
   \centering
   \caption[Rozkład gatunków w zbiorze EmoBank]{Rozkład gatunków tekstu w zbiorze
-  EmoBank przed i po filtrowaniu. SE07 oznacza korpus nagłówków prasowych
-  z zadania SemEval-2007 (\textit{Affective Text}), a MASC --- zróżnicowany
-  gatunkowo podzbiór korpusu OANC (\textit{Manually Annotated Sub-Corpus}).
-  Źródło: \cite{buechel-hahn-2017-emobank}.}
+          EmoBank przed i po filtrowaniu. SE07 oznacza korpus nagłówków prasowych
+          z zadania SemEval-2007 (\textit{Affective Text}), a MASC --- zróżnicowany
+          gatunkowo podzbiór korpusu OANC (\textit{Manually Annotated Sub-Corpus}).
+          Źródło: \cite{buechel-hahn-2017-emobank}.}
   \label{tab:emobank_genres}
   \begin{tabular}{llrr}
     \toprule
@@ -138,9 +137,11 @@ wartości neutralnej, szczególnie dla pobudzenia i dominacji. Wersja druga
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.8\linewidth]{figures/3/vad_score.png}
-  \caption{Rozkłady wartościowości, pobudzenia i dominacji (VAD) dla trzech
-  metod mapowania etykiet na wartości VAD. Linia przerywana oznacza wartość
-  neutralną~(0,5). Opracowanie na podstawie~\cite[s.~9776]{piper-budac-2025-cr4}.}
+  \caption[Rozkłady wartościowości, pobudzenia i dominacji (VAD) dla trzech
+          metod mapowania etykiet na wartości VAD.]
+          {Rozkłady wartościowości, pobudzenia i dominacji (VAD) dla trzech
+          metod mapowania etykiet na wartości VAD. Linia przerywana oznacza wartość
+          neutralną~(0,5). Źródło:~\cite[s.~9776]{piper-budac-2025-cr4}.}
   \label{fig:distribution_VAD}
 \end{figure}
 
@@ -196,9 +197,12 @@ podzieleniu zbioru na standardowe podzbiory daje:
 \section{Podsumowanie i ograniczenia}
 Do dalszych prac wybrano zbiór CR4-NarrEmote. Jego zaletą jest pochodzenie
 tekstów, czyli literatura narracyjna, bliska domenie aplikacji, oraz większy
-rozmiar po przygotowaniu danych (tabela~\ref{tab:datasets_comparison}).
-Zbiór GoEmotions pominięto, ponieważ jego etykiety to dyskretne kategorie
-emocji, a nie wymiary VAD, co wymagałoby dodatkowej konwersji.
+rozmiar po przygotowaniu danych ($38\,209$ wobec $10\,063$ wierszy). Do porównania użyto również
+badania jakości z modeli na podstawie metryk wspomnianych w (sekcji~\ref{sec:metrics}) jak widać
+CR4-narr ma lepsze wyniki w większości z badanych metryk (tabela~\ref{tab:results_cr4} oraz 
+tabela~\ref{tab:results_emobank}). Zbiór GoEmotions pominięto, ponieważ jego etykiety to dyskretne
+kategorie emocji, a nie wymiary VAD, co wymagałoby dodatkowej konwersji.
+
 \begin{table}[htbp]
   \centering
   \caption{Porównanie rozważanych zbiorów danych}
@@ -213,6 +217,68 @@ emocji, a nie wymiary VAD, co wymagałoby dodatkowej konwersji.
   \end{tabular}
 \end{table}
 
+\begin{table}[!htbp]
+  \centering
+  \caption{Wyniki modeli bazowych na zbiorze CR4-NarrEmote (średnia z wymiarów V, A, D)}
+  \label{tab:results_cr4}
+  \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Model} & \textbf{MAE} & \textbf{Pearson} & \textbf{CCC} & \textbf{std\_ratio} & \textbf{quadrant F1} \\
+    \midrule
+    Ridge               & $\mathbf{0{,}1948}$ & $\mathbf{0{,}6534}$ & $\mathbf{0{,}6034}$ & $0{,}6828$ & $\mathbf{0{,}4984}$ \\
+    XGBoost (regresja)  & $0{,}1953$ & $0{,}6515$ & $0{,}5980$ & $0{,}6658$ & $0{,}4967$ \\
+    XGBoost (drzewo)    & $0{,}2103$ & $0{,}5970$ & $0{,}5645$ & $\mathbf{0{,}7162}$ & $0{,}4932$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+  \centering
+  \caption{Wyniki modeli bazowych na zbiorze EmoBank (średnia z wymiarów V, A, D)}
+  \label{tab:results_emobank}
+  \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Model} & \textbf{MAE} & \textbf{Pearson} & \textbf{CCC} & \textbf{std\_ratio} & \textbf{quadrant F1} \\
+    \midrule
+    Ridge               & $0{,}1119$ & $0{,}4443$ & $\mathbf{0{,}3913}$ & $0{,}5828$ & $0{,}4071$ \\
+    XGBoost (regresja)  & $\mathbf{0{,}1075}$ & $\mathbf{0{,}4582}$ & $0{,}3829$ & $0{,}5211$ & $\mathbf{0{,}4075}$ \\
+    XGBoost (drzewo)    & $0{,}1212$ & $0{,}3505$ & $0{,}3187$ & $\mathbf{0{,}6199}$ & $0{,}3664$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Porównanie cech leksykonowych i osadzeń Sentence Transformer (średnia z wymiarów V, A, D).}
+    \begin{tabular}{l c c c c c}
+        \toprule
+        \textbf{Cechy / regresor} & \textbf{MAE} & \textbf{Pearson} & \textbf{CCC} & \textbf{std\_ratio} & \textbf{quadrant F1} \\
+        \midrule
+        \multicolumn{6}{l}{\textbf{CR4-NarrEmote}} \\
+        \multicolumn{6}{l}{\hspace{1em}\textit{Leksykon NRC VAD v2}} \\
+        \hspace{2em}Ridge              & $0{,}2602$ & $0{,}3705$ & $0{,}2504$ & $0{,}3686$ & $0{,}3034$ \\
+        \hspace{2em}XGBoost (regresja) & $0{,}2620$ & $0{,}3395$ & $0{,}2838$ & $0{,}5136$ & $0{,}3410$ \\
+        \hspace{2em}XGBoost (drzewo)   & $0{,}2590$ & $0{,}3552$ & $0{,}2853$ & $0{,}4771$ & $0{,}3310$ \\
+        \multicolumn{6}{l}{\hspace{1em}\textit{Sentence Transformer}} \\
+        \hspace{2em}Ridge              & $\mathbf{0{,}1948}$ & $\mathbf{0{,}6534}$ & $\mathbf{0{,}6034}$ & $0{,}6828$ & $\mathbf{0{,}4984}$ \\
+        \hspace{2em}XGBoost (regresja) & $0{,}1953$ & $0{,}6515$ & $0{,}5980$ & $0{,}6658$ & $0{,}4967$ \\
+        \hspace{2em}XGBoost (drzewo)   & $0{,}2103$ & $0{,}5970$ & $0{,}5645$ & $\mathbf{0{,}7162}$ & $0{,}4932$ \\
+        \midrule
+        \multicolumn{6}{l}{\textbf{EmoBank}} \\
+        \multicolumn{6}{l}{\hspace{1em}\textit{Leksykon NRC VAD v2}} \\
+        \hspace{2em}Ridge              & $0{,}1195$ & $0{,}2148$ & $0{,}1238$ & $0{,}2668$ & $0{,}2539$ \\
+        \hspace{2em}XGBoost (regresja) & $0{,}1303$ & $0{,}1989$ & $0{,}1718$ & $0{,}5564$ & $0{,}3111$ \\
+        \hspace{2em}XGBoost (drzewo)   & $0{,}1271$ & $0{,}1969$ & $0{,}1626$ & $0{,}5018$ & $0{,}3137$ \\
+        \multicolumn{6}{l}{\hspace{1em}\textit{Sentence Transformer}} \\
+        \hspace{2em}Ridge              & $0{,}1119$ & $0{,}4443$ & $\mathbf{0{,}3913}$ & $0{,}5828$ & $0{,}4071$ \\
+        \hspace{2em}XGBoost (regresja) & $\mathbf{0{,}1075}$ & $\mathbf{0{,}4582}$ & $0{,}3829$ & $0{,}5211$ & $\mathbf{0{,}4075}$ \\
+        \hspace{2em}XGBoost (drzewo)   & $0{,}1212$ & $0{,}3505$ & $0{,}3187$ & $\mathbf{0{,}6199}$ & $0{,}3664$ \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:lexicon_vs_st}
+\end{table}
+
 \FloatBarrier
 Wybrany zbiór ma jednak istotne ograniczenia. Największym z nich jest
 jednojęzyczność: oba rozważane zbiory są anglojęzyczne, więc zastosowanie
@@ -220,4 +286,3 @@ modelu do polskich e-booków wymaga tłumaczenia tekstu lub modelu
 wielojęzycznego Po drugie, zbiór zawiera oceny pojedynczych zdań, a aplikacja analizuje ciągły
 tekst, więc wpływ kontekstu nie jest bezpośrednio mierzony. Wreszcie, oceny
 emocji są subiektywne i mogą zależeć od kultury annotatorów.
-
