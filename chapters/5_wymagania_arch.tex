@@ -1,17 +1,157 @@
 \chapter{Analiza wymagań architektonicznych}
 \section{Opis działania systemu}
+\subsection{Cel i przeznaczenie systemu}
+Celem systemu jest zwiększenie komfortu i~immersji podczas czytania
+książek poprzez automatyczny dobór muzyki odtwarzanej w~tle. Muzyka
+dobierana jest na podstawie emocji zawartych w
+fragmencie tekstu, dzięki czemu użytkownik nie musi samodzielnie
+wyszukiwać ani zmieniać utworów w~trakcie lektury.
+
+\subsection{Użytkownicy i role}
+W~systemie wyróżniono dwie role użytkowników:
+\begin{itemize}
+    \item \textbf{Czytelnik:} główny użytkownik systemu. Dodaje książki
+          do swojej biblioteki, czyta je w~aplikacji oraz słucha muzyki
+          dobieranej automatycznie do czytanego fragmentu.
+    \item \textbf{Administrator:} odpowiada za utrzymanie i~rozwój
+          systemu. Zarządza biblioteką utworów muzycznych, dodaje nowe
+          nagrania oraz aktualizuje modele uczenia maszynowego
+          wykorzystywane do rozpoznawania emocji w~tekście.
+\end{itemize}
+
+\subsection{Główne funkcje}
+System udostępnia następujące funkcje:
+\begin{itemize}
+    \item wgranie książki w~formacie EPUB do biblioteki użytkownika,
+    \item automatyczna analiza emocjonalna całej książki po jej wgraniu,
+          wykonywana i~zapisywana wraz z~położeniem fragmentów w~tekście,
+    \item czytanie książki w~oknie przeglądarki internetowej wraz
+          z~nawigacją po rozdziałach
+    \item automatyczny dobór utworu muzycznego odpowiadającego nastrojowi
+          aktualnie czytanego fragmentu
+    \item odtwarzanie muzyki z~płynnymi przejściami między utworami,
+    \item sterowanie odtwarzaniem: pominięcie utworu, pauza oraz regulacja
+          głośności
+    \item zarządzanie katalogiem utworów i~modelami uczenia maszynowego
+          przez Administratora.
+\end{itemize}
+W~obecnej wersji system obsługuje książki w~języku angielskim w formacie epub ze strony
+Standard E-books\cite{StandardEbooks}
+
+\subsection{Główne komponenty i~ich współpraca}
+\begin{itemize}
+    \item \textbf{Frontend (React):} wyświetla książkę (epub.js),
+          śledzi aktualną pozycję czytania i~przekazuje ją do backendu,
+          obsługuje odtwarzacz audio oraz sterowanie muzyką.
+    \item \textbf{Backend (FastAPI):} przyjmuje wgrane książki, dzieli je
+          na zdania i~uruchamia ich analizę w~tle. Podczas czytania
+          dobiera utwór na podstawie pozycji w~książce i~zwraca
+          frontendowi jego identyfikator. Nie przesyła plików audio.
+    \item \textbf{Moduł NLP (DeBERTa-v3-base):} zamienia zdania na wartości
+          nastroju w~modelu VAD.
+    \item \textbf{Baza danych (SQLite):} przechowuje zdania książek wraz
+          z~wartościami VAD oraz katalog utworów z~metadanymi nastroju.
+    \item \textbf{Serwer plików (Nginx):} udostępnia pliki audio
+          bezpośrednio przeglądarce.
+\end{itemize}
 
 
 
-\section{Diagramy przypadków użycia}
+\section{Wymagania funkcjonalne i niefunkcjonalne}
+\subsection{Wymagania funkcjonalne}
+\begin{itemize}
+      \item[\textbf{FU1:}] Użytkownik ma możliwość wgrania pliku książki w formacie \textit{.epub}.
+      \item[\textbf{FU2:}] Aplikacja prezentuje listę wgranych książek wraz ze statusem ich przetwarzania.
+      \item[\textbf{FU3:}] Aplikacja umożliwia odczyt treści książki z automatycznym stronicowaniem oraz
+      nawigacją po rozdziałach (spis treści).
+      \item[\textbf{FU4:}] Aplikacja automatycznie dobiera i odtwarza podkład muzyczny na podstawie nastroju
+      (emocji) aktualnie czytanego fragmentu tekstu.
+      \item[\textbf{FU5:}] Aplikacja umożliwia kontrolę odtwarzacza audio (wstrzymanie, wznowienie, regulacja
+      głośności oraz pominięcie utworu na kolejny z tej samej kategorii nastroju).
+      \item[\textbf{FU6:}] Aplikacja prezentuje użytkownikowi informację o aktualnie rozpoznanym nastroju tekstu
+      oraz tytule/identyfikatorze odtwarzanego utworu.
+      \item[\textbf{FU7:}] Użytkownik ma możliwość usunięcia wybranej książki z biblioteki.
+\end{itemize}
 
-\section{Scenariusze przypadków użycia}
+\subsection{Wymagania niefunkcjonalne}
+\begin{itemize}
+      \item[\textbf{NF1:}] \textbf{Asynchroniczność przetwarzania:} Parsowanie plików EPUB oraz inferencja modelu
+      NLP muszą odbywać się w tle (asynchronicznie), nie blokując responsywności interfejsu użytkownika.
+
+      \item[\textbf{NF2:}] \textbf{Płynność przejść audio (crossfading):} Zmiana odtwarzanego utworu lub zmiana
+      kategorii nastroju w trakcie czytania musi odbywać się w sposób płynny (płynne wyciszanie poprzedniego i
+      pogłaśnianie kolejnego utworu), bez gwałtownych przerw i trzasków dźwiękowych.
+
+      \item[\textbf{NF3:}] \textbf{Responsywność i dynamiczne stronicowanie:} Algorytm podziału tekstu na strony
+      w czytniku musi automatycznie dostosowywać liczbę i objętość stron do aktualnego rozmiaru okna przeglądarki
+      (viewportu) i rozdzielczości ekranu.
+
+      \item[\textbf{NF4:}] \textbf{Predykcja z wyprzedzeniem (lookahead):} W celu uniknięcia opóźnień w doborze
+      ścieżki dźwiękowej, aplikacja powinna pobierać predykcje nastroju z wyprzedzeniem (dla bieżącej oraz
+      kolejnych stron tekstu).
+
+      \item[\textbf{NF5:}] \textbf{Konteneryzacja i łatwość wdrożenia:} Wszystkie komponenty systemu (frontend,
+      backend, serwis NLP, serwer multimediów) muszą być skonteneryzowane (Docker) i umożliwiać uruchomienie
+      całego środowiska za pomocą pojedynczego polecenia (\textit{docker compose up}).
+
+      \item[\textbf{NF6:}] \textbf{Modularność architektury:} Usługa inferencji modelu uczenia maszynowego (NLP)
+      musi stanowić niezależną usługę od głównego serwera aplikacji, komunikującą się za pośrednictwem protokołu
+      HTTP/REST API.
+
+      \item[\textbf{NF7:}] \textbf{Zarządzanie przestrzenią dyskową:} System powinien okresowo usuwać pliki
+      sesyjne oraz przetworzone dane starsze niż określony czas retencji, zapobiegając nadmiernemu zużyciu
+      pamięci masowej serwera.
+\end{itemize}
+
+
+
+\section{Przypadki użycia}
+\subsection{Spis przypadków użycia}
+\begin{itemize}
+      \item[\textbf{PU1:}] Wgranie pliku \textit{.epub} książki i uruchomienie wstępnego procesu.
+      \item[\textbf{PU2:}] Przeglądanie biblioteki wgranych książek i monitorowanie stanu
+      procesowania.
+      \item[\textbf{PU3:}] Usunięcie książki z biblioteki przez użytkownika. 
+      \item[\textbf{PU4:}] Otwarcie i lektura książki w specjalnym oknie.
+      \item[\textbf{PU5:}] Nawigacja po stronach za pomocą odopwiednich przycisków lub menu po 
+      rozdziałach
+      \item[\textbf{PU6:}] Automatyczne odtwarzanie i zmiana utworów w tle w
+      oparciu o wykryty nastrój czytanej treści.
+      \item[\textbf{PU7:}] Manualna regulacja głośności, wstrzymywanie odtwarzania
+        oraz pomijanie utworów.
+\end{itemize}
+
+\subsection{Opis wybranych przypadków użycia}
+\subsubsection{PU1: Wgranie pliku i procesowanie.}
+\begin{enumerate}
+      \item Użytkownik wybiera opcję wgrania pliku (\textit{Upload epub}) i wskazuje plik z dysku lokalnego.
+      \item System weryfikuje poprawność formatu wskazanego pliku (wymagany format \textit{.epub}).
+      \item Po pomyślnej walidacji książka zostaje dodana do biblioteki ze statusem informującym o rozpoczęciu
+      przetwarzania.
+      \item System dokonuje asynchronicznej analizy struktury książki oraz wyznaczenia profilu emocjonalnego
+      tekstu.
+      \item Po zakończeniu procesu status książki zostaje zaktualizowany na ukończony (\textit{done}),
+      umożliwiając użytkownikowi jej odczyt.
+\end{enumerate}
+
+\subsubsection{PU6: Automatyczne odtwarzanie muzyki.}
+\begin{enumerate}
+      \item Po otworzeniu książki do czytania, do warstwy serwerowej wysyłane są indeksy aktualnych
+      oraz przyszłych zdań.
+      \item Aplikacja serwerowa analizuje dane zdania i porównuje je  z wygenerowaymi wcześniej
+      wartościami emocji dla danego tekstu.
+      \item Warstwa serwerowa zwraca etykietę emocji oraz jej tzw. pewność, na podstawie, której
+      dobierany jest utwór w warstwie prezentacji.
+      \item Warstwa prezentacji dobiera utwór oraz odtwarza go ze statycznego serwera.
+\end{enumerate}
+
+
 
 \section{Projekt interfejsu REST/API}
 
 \section{Diagram sekwencyjny analizy modelu}
 
-\section{Wymagania funkcjonalne i niefunkcjonalne}
+
 
 \section{Schemat połączenia modelu uczenia maszynowego z aplikacją}
 
