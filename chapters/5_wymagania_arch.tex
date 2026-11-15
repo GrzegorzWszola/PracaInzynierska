@@ -40,7 +40,7 @@ Standard E-books\cite{StandardEbooks}
 
 \subsection{Główne komponenty i~ich współpraca}
 \begin{itemize}
-    \item \textbf{Frontend (React):} wyświetla książkę (epub.js),
+    \item \textbf{Frontend (React):} wyświetla książkę,
           śledzi aktualną pozycję czytania i~przekazuje ją do backendu,
           obsługuje odtwarzacz audio oraz sterowanie muzyką.
     \item \textbf{Backend (FastAPI):} przyjmuje wgrane książki, dzieli je
@@ -124,12 +124,13 @@ Standard E-books\cite{StandardEbooks}
 \subsection{Opis wybranych przypadków użycia}
 \subsubsection{PU1: Wgranie pliku i procesowanie.}
 \begin{enumerate}
-      \item Użytkownik wybiera opcję wgrania pliku (\textit{Upload epub}) i wskazuje plik z dysku lokalnego.
+      \item Użytkownik wybiera opcję wgrania pliku (\textit{Upload epub}) i wskazuje plik z dysku 
+      lokalnego.
       \item System weryfikuje poprawność formatu wskazanego pliku (wymagany format \textit{.epub}).
-      \item Po pomyślnej walidacji książka zostaje dodana do biblioteki ze statusem informującym o rozpoczęciu
-      przetwarzania.
-      \item System dokonuje asynchronicznej analizy struktury książki oraz wyznaczenia profilu emocjonalnego
-      tekstu.
+      \item Po pomyślnej walidacji książka zostaje dodana do biblioteki ze statusem informującym o 
+      rozpoczęciu przetwarzania.
+      \item System dokonuje asynchronicznej analizy struktury książki oraz wyznaczenia profilu 
+      emocjonalnego tekstu.
       \item Po zakończeniu procesu status książki zostaje zaktualizowany na ukończony (\textit{done}),
       umożliwiając użytkownikowi jej odczyt.
 \end{enumerate}
@@ -145,14 +146,215 @@ Standard E-books\cite{StandardEbooks}
       \item Warstwa prezentacji dobiera utwór oraz odtwarza go ze statycznego serwera.
 \end{enumerate}
 
+\begin{figure}[htbp]
+      \center
+      \includegraphics[width=0.9\linewidth]{figures/5/diagram_pu.png}
+      \caption{Diagram przypadków użycia}
+      \label{fig:usecase_diagram}
+\end{figure}
+
 
 
 \section{Projekt interfejsu REST/API}
+\subsection{Punkty dostępu udostępniane przez aplikację}
+\begin{table}[htbp]
+      \center
+      \caption{Tablica punktów końcowych aplikacji}
+      \label{tab:endpoints}
+      \begin{tabular}{l l p{7cm}}
+          \toprule
+          Metoda & Ścieżka & Opis \\
+          \midrule
+          POST   & \texttt{/session/init}            & Inicjalizacja sesji
+          użytkownika i nadanie ciasteczka sesyjnego (\texttt{sid}) \\
+          POST   & \texttt{/books/upload\_epub}      & Przesłanie pliku EPUB
+          i uruchomienie asynchronicznego przetwarzania \\
+          GET    & \texttt{/books/mine}              & Pobranie listy książek
+          przypisanych do bieżącej sesji użytkownika \\
+          GET    & \texttt{/books/\{job\_id\}/status}  & Pobranie aktualnego
+          statusu przetwarzania książki \\
+          GET    & \texttt{/books/\{job\_id\}/content} & Pobranie
+          przetworzonej treści książki w formacie JSON \\
+          DELETE & \texttt{/books/\{job\_id\}}        & Usunięcie książki
+          oraz powiązanych plików z serwera \\
+          POST   & \texttt{/predictions/\{job\_id\}}  & Klasyfikacja
+          nastroju/emocji dla wskazanego fragmentu zdań \\
+          GET    & \texttt{/health}                  & Sprawdzenie stanu
+          dostępności serwisu (health check) \\
+          \midrule[\heavyrulewidth]
+          \multicolumn{3}{l}{\textit{Wewnętrzny mikroserwis NLP (komunikacja
+          międzykontenerowa):}} \\
+          \midrule
+          POST   & \texttt{/prediction/\{job\_id\}}   & Wyznaczenie wektorów 
+          VAD dla zdań książki przez model DeBERTa \\
+          \bottomrule
 
-\section{Diagram sekwencyjny analizy modelu}
+      \end{tabular}
+\end{table}
 
 
+
+
+\FloatBarrier
+\subsection{Struktura ciała wybranych zapytań i generowanych plików}
+Ciała zapytań podczas komunikacji są oparte na strukturze plików \textit{.json}. Poniżej podane
+zostały przykłady budowy takich zapytań.
+\subsubsection{Budowa pliku \textit{book.json} (przeprocesowanej książki z formatu \textit{.epub})}
+\begin{lstlisting}[style=jsonStyle, caption={
+            Przykład przeprocesowanej książki, tutaj: \textit{"At the Mountains of Madness"},
+            Autorstwa \textit{H. P. Lovecraft'a}\cite{MountainOfMadnessLovecrafr}
+}, label={lst:json_processed}]
+{
+  "metadata": {
+    "title": "At the Mountains of Madness",
+    "author": "H. P. Lovecraft",
+    "source_format": "standard_ebooks",
+    "sentence_splitter": "pysbd 0.3.4",
+    "created_at": "2026-11-13T12:36:26",
+    "num_chapters": 12,
+    "num_sentences": 1352
+  },
+  "chapters": [
+    {
+      "chapter_id": 1,
+      "title": "I",
+      "paragraphs": [
+        {
+          "paragraph_id": 1,
+          "sentences": [
+            {
+              "id": 1,
+              "text": "I am forced into speech because men of science have refused to follow my advice without knowing why."
+            },
+      ...
+\end{lstlisting}
+
+\subsubsection{Struktura pliku \textit{vad.json} (listy id z ich predykcjami)}
+\begin{lstlisting}[style=jsonStyle, caption={
+      Plik zawiera predykcje \textit{VAD} dla każdego id zdania, obliczone centroidy dla etykiet, 
+      przesunięcie środka skali, oraz promień neutralności.
+}, label{lst:json_vad}]
+{
+    "meta": {
+        "model_name": "deberta-vad-seed42",
+        "columns": [
+            "valence",
+            "arousal",
+            "dominance"
+        ],
+        "config": {
+            "centroids": {
+                "joy": [
+                    0.3801,
+                    0.5073,
+                    0.3842
+                ],
+                "sadness": [
+                    -0.5985,
+                    0.0093,
+                    -0.5293
+                ],
+                "tense": [
+                    -0.3327,
+                    0.4785,
+                    -0.0
+                ],
+                "calm": [
+                    0.2694,
+                    -0.2047,
+                    -0.3125
+                ]
+            },
+            "r_neutral": 0.1972,
+            "k": [
+                0.5272,
+                0.4495,
+                0.725
+            ],
+            "center": [
+                -0.1261,
+                0.1999,
+                -0.0421
+            ]
+        }
+    },
+    "vad": {
+        "1": [
+            -0.4039,
+            0.2931,
+            -0.2142
+        ],
+      ...
+\end{lstlisting}
+
+\subsubsection{Zapytanie i odpowiedź serwera zawierający etykietę emocji}
+\begin{lstlisting}[style=jsonStyle, caption={
+      Zapytanie i odpowiedź serwera na zapytanie \textit{/predictions/{job\_id}}, przekazujące etykietę emocji
+      pewność oraz różnice od drugiej najpewniejszej odpowiedzi
+}, label={lst:predictions_answer}]
+# Zapytanie
+{
+      "sentence_ids": [488, 489, 490, 491, 492, 493, ...]
+}
+
+# Odpowiedz
+{
+    "job_id": "37d9141d50e846c2bb4e5c9913c878e0",
+    "label": "tense",
+    "certainty": 0.6666666666666666,
+    "margin": 0.4286
+}
+\end{lstlisting}
+
+\subsubsection{Generowany plik \textit{manifest.json}, używany jako lista utworów dla warstwy 
+prezentacji}
+\begin{lstlisting}[style=jsonStyle, caption={
+      Struktura pliku \textit{manifest.json}, generowanego przez serwer nginx z muzyką
+}, label={lst:manifest}]
+[
+      {
+            "filename": "01 - DREAMCATCHER by Onycs.mp3",
+            "id": "01 - DREAMCATCHER by Onycs",
+            "category": "calm",
+            "path": "calm/01 - DREAMCATCHER by Onycs.mp3"
+      },
+      {
+            "filename": "05 - Tension Rising.mp3",
+            "id": "05 - Tension Rising",
+            "category": "tense",
+            "path": "tense/05 - Tension Rising.mp3"
+      }
+]
+\end{lstlisting}
 
 \section{Schemat połączenia modelu uczenia maszynowego z aplikacją}
+Aplikacja łączy się z modelem poprzez sieć. Kontener zawierający obsługę modelu uczenia maszynowego
+jak i całą logikę z nim związaną udostępnia \textit{endpoint}, który otrzymuje \textit{.json}
+zawierający przeprocesowaną książke, a następnie zwraca nowy plik zawierający predykcje wartości
+dla każdego ze zdań w książce oraz dodatkowe parametry. Taki sposób procesowania przyspiesza późniejsze predykcje kosztem
+dłuższego oczekiwania wstępnego.
+\begin{figure}[htbp]
+      \center
+      \includegraphics[width=0.7\linewidth]{figures/5/flowdiagram_55.png}
+      \caption{Diagram przepływu dla połączenia modelu z warstwą serwerową}
+      \label{fig:flow_diagram_nlp_backend}
+\end{figure}
 
-\section{Schemat powiązania bazy danych z serwerem na dane}
+
+\section{Schemat powiązania warstwy prezentacji z serwerem na dane}
+Warstwa prezentacji pobiera muzykę bezpośrednio ze statycznego serwera nginx. Aby mieć możliwość
+odtwarzania kolejnego utworu z tego samego nastroju, serwer przy starcie generuje plik 
+\textit{"manifest.json"} zawierający indeks utworów, serwowaną ścieżkę, oraz jego nastrój. Warstwa
+prezentacji pobiera, ten plik przy uruchomieniu w przeglądarce, a następnie używa go do śledzenia
+ostatnio odtwarzanych utworów. Dzięki takiemu rozwiązaniu obraz kontenera frontendu nie zawiera 
+plików audio, muzyka przechowywana jest wyłącznie w wolumenie serwera nginx. Pozwala to na łatwe 
+dodawanie i usuwanie utworów bez ponownego budowania i uruchamiania warstwy prezentacji.
+\begin{figure}[htbp]
+      \center
+      \includegraphics[width=0.6\linewidth]{figures/5/flow_56.png}
+      \caption{Diagram przepływu pomiędzy warstwą prezentacji, a serwerem statycznym}
+      \label{fig:flowdiagram_frontend_nginx}
+\end{figure}
+
+
+

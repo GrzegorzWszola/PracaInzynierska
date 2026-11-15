@@ -22,6 +22,7 @@
 \RequirePackage{newtxtext} 
 \RequirePackage{newtxmath}
 \RequirePackage{microtype} % Poprawia optyczny wygląd tekstu
+\RequirePackage{tabularx}
 
 %%% 3. GEOMETRIA I GRAFIKA
 \RequirePackage{geometry}
@@ -132,6 +133,43 @@
     morekeywords=[2]{print,len,range,enumerate,zip,isinstance,open,sum,min,max,sorted,float,int,str,list,dict,set,tuple},
     morekeywords={self,cls,None,True,False,with,as,yield,lambda,async,await},
     emph={self,cls}
+}
+
+\colorlet{codekey}{codekw}
+
+\lstdefinelanguage{json}{
+    sensitive=true,
+    morestring=[b]",                 
+    morecomment=[l]{:\ "},           
+    morecomment=[l]{:"},             
+    morekeywords={true,false,null}
+}
+
+\lstdefinestyle{jsonStyle}{
+    language=json,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\bfseries\color{codekw},     % true, false, null
+    stringstyle=\color{codekey},              % klucze
+    commentstyle=\color{codestr},             % wartości tekstowe
+    literate=                                 % liczby
+        *{0}{{{\color{codekw}0}}}{1}
+         {1}{{{\color{codekw}1}}}{1}
+         {2}{{{\color{codekw}2}}}{1}
+         {3}{{{\color{codekw}3}}}{1}
+         {4}{{{\color{codekw}4}}}{1}
+         {5}{{{\color{codekw}5}}}{1}
+         {6}{{{\color{codekw}6}}}{1}
+         {7}{{{\color{codekw}7}}}{1}
+         {8}{{{\color{codekw}8}}}{1}
+         {9}{{{\color{codekw}9}}}{1},
+    tabsize=2,                                % JSON zwykle z wcięciem 2
+    showstringspaces=false,
+    breaklines=true,
+    breakatwhitespace=false,
+    columns=fullflexible,
+    keepspaces=true,
+    upquote=true,
+    xleftmargin=1.5em
 }
 
 %%% 7. HYPERREF I CLEVEREF (Musi być na końcu)
