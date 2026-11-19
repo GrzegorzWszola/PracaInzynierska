@@ -1,4 +1,4 @@
-\chapter{Analiza, eksperymenty i trenowanie modeli uczenia maszynowego}
+\chapter{Modele uczenia maszynowego i eksperymenty}
 Dobór odpowiedniego modelu uczenia maszynowego ma duży wpływ na jakoś ostatecznej predykcji, dlatego
 przeprowadzenie odpowiednich eksperymentów i sprawdzenie jakości inferencji 
 (ang.~\textit{inference}) jest istotnym czynnikiem późniejszego działania aplikacji. 
@@ -23,8 +23,8 @@ decyzyjnych (XGBoost~\cite{XGBoost}).
 \end{figure}
 
 
-\subsection{Przedtrenowany model}
-Przedtrenowany (ang. \textit{pre-trained}) model typu Transformer
+\subsection{Wstępnie przeszkolony model}
+Wstępnie przeszkolony (ang. \textit{pre-trained}) model typu Transformer
 dostrojony do własnego zadania (ang. \textit{fine-tuning}). Użyto modelu
 DeBERTa-v3-base~\cite{he2023debertav3improvingdebertausing} firmy Microsoft.
 \begin{figure}[htbp]
@@ -39,7 +39,7 @@ DeBERTa-v3-base~\cite{he2023debertav3improvingdebertausing} firmy Microsoft.
 
 
 
-\section{Badania i analiza modeli}
+\section{Porównanie skuteczności wybranych modeli}
 W tej sekcji porównano modele pod względem jakości predykcji oraz kosztu
 obliczeniowego, czyli czasu trenowania i zużycia pamięci. Zestawiono ze sobą
 dwa podejścia: zamrożone modele osadzeń zdań z prostym regresorem oraz
@@ -47,7 +47,7 @@ dostrojony model DeBERTa-v3-base. Celem jest wybór modelu, który najlepiej
 sprawdzi się w budowanej aplikacji.
 
 
-\subsection{Wstęp teoretyczny i plan eksperymentów}
+\subsection{Plan eksperymentów}
 \subsubsection{Środowisko testowe}
 Badania wykonane były wykonywane w środowisku WSL (Windows Subsystem for Linux), komputerze o
 podanej specyfikacji:
@@ -275,7 +275,7 @@ odniesienia dla modelu dostrojonego.
 
 
 \FloatBarrier
-\subsection{Porównanie modeli osadzeń do dostrojonego modelu}
+\subsection{Ocena i porównanie efektywności modeli}
 \label{sec:deberta_theory}
 DeBERTa (ang.\ \textit{Decoding-enhanced BERT with disentangled
 attention})~\cite{he2021deberta} jest modelem typu Transformer rozwijającym

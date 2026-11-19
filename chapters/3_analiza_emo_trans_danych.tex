@@ -16,7 +16,7 @@ pogorszenia wyników, które często trudno wykryć.
     \label{fig:vad_representation}
 \end{figure}
 
-\section{Czym jest VAD}
+\section{Definicja VAD}
 VAD (ang. Valence, Arousal, Dominance) jest wymiarowym modelem emocji, w którym stan emocjonalny
 reprezentowany jest przez trzy wartości liczbowe. Wartościowość (ang. \textit{valence}) określa,
 jak przyjemna lub nieprzyjemna jest dana emocja, pobudzenie (ang. \textit{arousal}) jak silnie
@@ -146,7 +146,6 @@ wartości neutralnej, szczególnie dla pobudzenia i dominacji. Wersja druga
 \end{figure}
 
 \FloatBarrier
-\subsection{Własna transformacja danych i rekomendacje autorów}
 Do trenowania modelu autorzy zalecają użycie wersji drugiej (SBERT oraz etykiety użytkowników) w
 przypadku wartościowości (ang. \textit{valence}), oraz pierwszej (mapowania za pomocą leksykonu) 
 wersji dla pobudzenia (ang. \textit{arousal}) oraz dominacji (ang. \textit{dominance}):
@@ -194,7 +193,7 @@ podzieleniu zbioru na standardowe podzbiory daje:
   \end{tabular}
 \end{table}
 
-\section{Podsumowanie i ograniczenia}
+\section{Wnioski i ograniczenia}
 Do dalszych prac wybrano zbiór CR4-NarrEmote. Jego zaletą jest pochodzenie
 tekstów, czyli literatura narracyjna, bliska domenie aplikacji, oraz większy
 rozmiar po przygotowaniu danych ($38\,209$ wobec $10\,063$ wierszy). Do porównania użyto również

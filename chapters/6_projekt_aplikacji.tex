@@ -1,5 +1,4 @@
 \chapter{Projekt aplikacji}
-\section{Wstęp}
 Aplikacja zbudowana jest w środowisku Docker\cite{docker} i składa się z czterech kontenerów w 
 architekturze trójwarstwowej, uzupełnionej o oddzielny serwis NLP (ang. Natural Language
 Processing) odpowiadający za działanie modelu uczenia maszynowego. Wydzielenie serwisu NLP z 
@@ -52,6 +51,7 @@ Gotowa aplikacja serwowana jest przez wbudowany serwer Nginx jako zestaw statycz
     \end{tabular}
 \end{table}
 
+\FloatBarrier
 \subsection{Przepływ danych między czytnikiem a odtwarzaczem}
 Komunikacja między komponentem czytnika a odtwarzaczem muzycznym odbywa się 
 za pośrednictwem komponentu nadrzędnego \textit{App}. Czytnik przekazuje 
@@ -199,10 +199,9 @@ w~pliku \textit{vad.json}.
     dla książki \textit{"At the mountains of madness"} H. P. Lovecraft'a}
     \label{fig:centroids}
 \end{figure}
+\FloatBarrier
 W podanym przykładzie znaczna część predykcji skupia się wokół napięcia, ponieważ analizowany
 fragment pochodzi z utworu z gatunku horroru.
-
-
 
 \section{Środowisko uruchomieniowe i konteneryzacja}
 W celu zapewnienia powtarzalności środowiska wykonawczego oraz łatwości
@@ -297,3 +296,4 @@ montowania wiązanego (\textit{bind mounts}) z flagą \textit{ro},
 zabezpieczając je przed nieautoryzowaną modyfikacją z poziomu
 uruchomionych procesów.
 
+\subsection{Interfejs użytkownika}

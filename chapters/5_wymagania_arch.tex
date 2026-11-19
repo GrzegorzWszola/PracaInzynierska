@@ -1,4 +1,4 @@
-\chapter{Analiza wymagań architektonicznych}
+\chapter{Analiza wymagań projektowych}
 \section{Opis działania systemu}
 \subsection{Cel i przeznaczenie systemu}
 Celem systemu jest zwiększenie komfortu i~immersji podczas czytania
@@ -6,6 +6,13 @@ książek poprzez automatyczny dobór muzyki odtwarzanej w~tle. Muzyka
 dobierana jest na podstawie emocji zawartych w
 fragmencie tekstu, dzięki czemu użytkownik nie musi samodzielnie
 wyszukiwać ani zmieniać utworów w~trakcie lektury.
+
+\begin{figure}[htbp]
+      \center
+      \includegraphics[width=0.7\linewidth]{figures/5/diagram_5.png}
+      \caption{Uproszczony diagram architektury aplikacji}
+      \label{fig:app_diagram}
+\end{figure}
 
 \subsection{Użytkownicy i role}
 W~systemie wyróżniono dwie role użytkowników:
@@ -165,27 +172,27 @@ Standard E-books\cite{StandardEbooks}
           \toprule
           Metoda & Ścieżka & Opis \\
           \midrule
-          POST   & \texttt{/session/init}            & Inicjalizacja sesji
-          użytkownika i nadanie ciasteczka sesyjnego (\texttt{sid}) \\
-          POST   & \texttt{/books/upload\_epub}      & Przesłanie pliku EPUB
+          POST   & \textit{/session/init}            & Inicjalizacja sesji
+          użytkownika i nadanie ciasteczka sesyjnego (\textit{sid}) \\
+          POST   & \textit{/books/upload\_epub}      & Przesłanie pliku EPUB
           i uruchomienie asynchronicznego przetwarzania \\
-          GET    & \texttt{/books/mine}              & Pobranie listy książek
+          GET    & \textit{/books/mine}              & Pobranie listy książek
           przypisanych do bieżącej sesji użytkownika \\
-          GET    & \texttt{/books/\{job\_id\}/status}  & Pobranie aktualnego
+          GET    & \textit{/books/\{job\_id\}/status}  & Pobranie aktualnego
           statusu przetwarzania książki \\
-          GET    & \texttt{/books/\{job\_id\}/content} & Pobranie
+          GET    & \textit{/books/\{job\_id\}/content} & Pobranie
           przetworzonej treści książki w formacie JSON \\
-          DELETE & \texttt{/books/\{job\_id\}}        & Usunięcie książki
+          DELETE & \textit{/books/\{job\_id\}}        & Usunięcie książki
           oraz powiązanych plików z serwera \\
-          POST   & \texttt{/predictions/\{job\_id\}}  & Klasyfikacja
+          POST   & \textit{/predictions/\{job\_id\}}  & Klasyfikacja
           nastroju/emocji dla wskazanego fragmentu zdań \\
-          GET    & \texttt{/health}                  & Sprawdzenie stanu
+          GET    & \textit{/health}                  & Sprawdzenie stanu
           dostępności serwisu (health check) \\
           \midrule[\heavyrulewidth]
           \multicolumn{3}{l}{\textit{Wewnętrzny mikroserwis NLP (komunikacja
           międzykontenerowa):}} \\
           \midrule
-          POST   & \texttt{/prediction/\{job\_id\}}   & Wyznaczenie wektorów 
+          POST   & \textit{/prediction/\{job\_id\}}   & Wyznaczenie wektorów 
           VAD dla zdań książki przez model DeBERTa \\
           \bottomrule
 
@@ -327,7 +334,7 @@ prezentacji}
 ]
 \end{lstlisting}
 
-\section{Schemat połączenia modelu uczenia maszynowego z aplikacją}
+\section{Metoda połączenia modelu uczenia maszynowego z aplikacją}
 Aplikacja łączy się z modelem poprzez sieć. Kontener zawierający obsługę modelu uczenia maszynowego
 jak i całą logikę z nim związaną udostępnia \textit{endpoint}, który otrzymuje \textit{.json}
 zawierający przeprocesowaną książke, a następnie zwraca nowy plik zawierający predykcje wartości
@@ -341,7 +348,7 @@ dłuższego oczekiwania wstępnego.
 \end{figure}
 
 
-\section{Schemat powiązania warstwy prezentacji z serwerem na dane}
+\section{Metoda powiązania warstwy prezentacji z serwerem na dane}
 Warstwa prezentacji pobiera muzykę bezpośrednio ze statycznego serwera nginx. Aby mieć możliwość
 odtwarzania kolejnego utworu z tego samego nastroju, serwer przy starcie generuje plik 
 \textit{"manifest.json"} zawierający indeks utworów, serwowaną ścieżkę, oraz jego nastrój. Warstwa
